@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package educode.catalogue.api;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "educode/protobuf/challenge.proto";
+
+option java_package = "de.hhu.educode.catalogue.api";
+option java_multiple_files = true;
+
+service CatalogueService {
+    rpc FindById (FindRequest) returns (educode.protobuf.Challenge) {
+		option (google.api.http) = {
+			get: "/v1/challenges/{id}"
+		};
+	}
+	
+    rpc List (ListRequest) returns (stream educode.protobuf.Challenge) {
+		option (google.api.http) = {
+			get: "/v1/challenges"
+		};
+	}
+	
+    rpc Put (educode.protobuf.Challenge) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/v1/challenges"
+			body: "*"
+		};
+	}
+
+    rpc Whitelist (WhitelistEntry) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+			post: "/v1/whitelist"
+			body: "*"
+		};
+    }
+
+    rpc IsWhitelisted (WhitelistEntry) returns (WhitelistEntry) {
+        option (google.api.http) = {
+			get: "/v1/whitelist"
+		};
+    }
+}
+
+message FindRequest {
+    string id = 1;
+}
+
+message ListRequest {
+    int32 page = 1;
+    int32 items_per_page = 2;
+}
+
+message WhitelistResponse {
+    bool whitelisted = 1;
+}
+
+message WhitelistEntry {
+    string user = 1;
+    string challenge = 2;
+    string start_time = 3;
+    string end_time = 4;
+}

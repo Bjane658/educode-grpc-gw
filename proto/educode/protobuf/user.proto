@@ -1,0 +1,14 @@
+syntax = "proto3";
+package educode.protobuf;
+
+option java_package = "de.hhu.educode.protobuf";
+option java_multiple_files = true;
+
+message User {
+    string id = 1;
+    string title = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string email = 5;
+    string role = 6;
+}

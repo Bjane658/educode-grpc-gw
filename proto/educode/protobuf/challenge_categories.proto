@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package educode.protobuf;
+
+option java_package = "de.hhu.educode.protobuf";
+option java_multiple_files = true;
+
+message ChallengeCategories {
+	string challengeId = 1;
+	repeated string categories = 2;
+}

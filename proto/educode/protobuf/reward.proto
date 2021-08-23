@@ -1,0 +1,10 @@
+syntax = "proto3";
+package educode.protobuf;
+
+option java_package = "de.hhu.educode.protobuf";
+option java_multiple_files = true;
+
+message Reward {
+    string method_name = 1;
+    int32 points = 2;
+}

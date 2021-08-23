@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package educode.authenticator.api;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "educode/protobuf/json_web_key.proto";
+import "educode/protobuf/user.proto";
+
+option java_package = "de.hhu.educode.authenticator.api";
+option java_multiple_files = true;
+
+service AuthenticatorService {
+    rpc Authenticate (AuthenticationRequest) returns (AuthenticationResponse) {
+		option (google.api.http) = {
+			post: "/v1/authenticate"
+			body: "*"
+		};
+	}
+
+	rpc Register (RegistrationRequest) returns (AuthenticationResponse) {
+		option (google.api.http) = {
+			post: "/v1/register"
+			body: "*"
+		};
+	}
+
+	rpc SyncWhitelist (SyncRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			put: "/v1/whitelist"
+			body: "*"
+		};
+	}
+
+	rpc ResolveUser (stream ResolveRequest) returns (stream educode.protobuf.User) {
+		option (google.api.http) = {
+			post: "/v1/resolve"
+			body: "*"
+		};
+	}
+
+	rpc GetCertificates (google.protobuf.Empty) returns (CertificatesResponse) {
+		option (google.api.http) = {
+			get: "/v1/certs"
+		};
+	}
+
+	rpc ListUsers (ListRequest) returns (stream educode.protobuf.User) {
+		option (google.api.http) = {
+			get: "/v1/users"
+		};
+	}
+
+	rpc UpdateUserRole (RoleUpdateRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			put: "/v1/users/{username}/role"
+			body: "*"
+		};
+	}
+}
+
+message ResolveRequest {
+	string username = 1;
+}
+
+message SyncRequest {
+	repeated string usernames = 1;
+}
+
+message RegistrationRequest {
+	string password = 1;
+}
+
+message AuthenticationRequest {
+	string username = 1;
+	string password = 2;
+}
+
+message RoleUpdateRequest {
+	string username = 1;
+	string role = 2;
+}
+
+message ListRequest {
+	int32 page = 1;
+	int32 page_size = 2;
+}
+
+message AuthenticationResponse {
+	string token = 1;
+}
+
+message CertificatesResponse {
+	repeated educode.protobuf.JsonWebKey keys = 1;
+}

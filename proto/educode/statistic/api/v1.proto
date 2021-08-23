@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package educode.statistic.api;
+
+import "google/api/annotations.proto";
+import "educode/protobuf/difficulty.proto";
+import "educode/protobuf/submission_timestamp.proto";
+import "educode/protobuf/points_per_challenge.proto";
+import "educode/protobuf/submission_count.proto";
+import "educode/protobuf/average_challenge_points.proto";
+import "educode/protobuf/challenge_categories.proto";
+import "educode/protobuf/submissions_per_hour.proto";
+import "educode/protobuf/submission_highscore_entry.proto";
+import "google/protobuf/empty.proto";
+
+option java_package = "de.hhu.educode.statistic.api";
+option java_multiple_files = true;
+
+
+service StatisticService {
+
+    rpc getDifficulty (ChallengeId) returns (educode.protobuf.Difficulty) {
+        option (google.api.http) = {
+                    get: "/v1/difficulty"
+                };
+    }
+
+    rpc postDifficulty (educode.protobuf.Difficulty) returns (educode.protobuf.Difficulty) {
+        option (google.api.http) = {
+                    post: "/v1/difficulty",
+                    body: "*"
+                };
+    }
+
+		rpc getSubmissionTimestamp (ChallengeId) returns (educode.protobuf.SubmissionTimestamp) {
+        option (google.api.http) = {
+                    get: "/v1/submissions/timestamp"
+                };
+		}
+
+		rpc postSubmissionTimestamp (ChallengeId) returns (educode.protobuf.SubmissionTimestamp) {
+        option (google.api.http) = {
+                    post: "/v1/submissions/timestamp",
+                    body: "*"
+                };
+		}
+
+		rpc getPointsPerChallenge (Filter) returns (PointsPerChallengeResponse) {
+			option (google.api.http) = {
+                    get: "/v1/challenges/points"
+								};
+		}
+
+		rpc getSubmissionCount (Filter) returns (SubmissionCountResponse) {
+			option (google.api.http) = {
+                    get: "/v1/submissions/count"
+								};
+		}
+
+		rpc getSubmissionsPerHour (Filter) returns (SubmissionsPerHourResponse) {
+			option (google.api.http) = {
+                    get: "/v1/submissions/counthour"
+								};
+		}
+
+		rpc getAverageChallengePoints (Filter) returns (AverageChallengePointsResponse) {
+			option (google.api.http) = {
+                    get: "/v1/challenge/points/average"
+								};
+		}
+
+		rpc getSubmissionHighscore (Filter) returns (SubmissionHighscoreResponse) {
+			option (google.api.http) = {
+                    get: "/v1/submissions/highscore"
+								};
+		}
+
+		rpc postChallengeCategories (educode.protobuf.ChallengeCategories) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+                    post: "/v1/challenges/categories",
+                    body: "*"
+                };
+		}
+
+		rpc getChallengeCategories (google.protobuf.Empty) returns (ChallengeCategoriesResponse) {
+			option (google.api.http) = {
+                    get: "/v1/challenges/categories"
+								};
+		}
+
+		rpc getAverageDifficulties (Filter) returns (AverageDifficultiesResponse) {
+			option (google.api.http) = {
+                    get: "/v1/difficulty/average"
+								};
+		}
+
+}
+
+message ChallengeId {
+	string challengeId = 1;
+}
+
+message AverageDifficultiesResponse {
+	repeated educode.protobuf.Difficulty challenges = 1;
+}
+
+message ChallengeCategoriesResponse {
+	repeated string categories = 1;
+}
+
+message Filter {
+	string fromDate = 1;
+	string toDate = 2;
+	string category = 3;
+}
+
+message SubmissionCountResponse {
+	repeated educode.protobuf.SubmissionCount count = 1;
+
+}
+
+message DifficultyPostRequest {
+    string challengeId = 1;
+    string difficulty = 2;
+}
+
+message PointsPerChallengeResponse {
+	repeated educode.protobuf.PointsPerChallenge points = 1;
+}
+
+message AverageChallengePointsResponse {
+	repeated educode.protobuf.AverageChallengePoints challenges = 1;
+}
+
+message SubmissionsPerHourResponse {
+	repeated educode.protobuf.SubmissionsPerHour hours = 1;
+}
+
+message SubmissionHighscoreResponse {
+	repeated educode.protobuf.SubmissionHighscoreEntry highscore = 1;
+}
+
